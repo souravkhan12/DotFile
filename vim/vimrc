@@ -5,6 +5,7 @@ Plug 'rbgrouleff/bclose.vim'
 Plug 'dbakker/vim-projectroot'
 Plug 'scrooloose/nerdtree'
 Plug 'majutsushi/tagbar'
+Plug 'rhysd/vim-clang-format'
 
 "UI Plugins
 Plug 'vim-airline/vim-airline'
@@ -51,6 +52,7 @@ set hls
 set is
 set nobackup
 set ts=4
+set foldmethod=syntax
 set sw=4
 set si
 nnoremap gb :w<CR>:!printf "\033c" && g++ -g -std=c++17 -Wall -Wextra -Wno-unused-result -D LOCAL -O2 %:r.cpp -o %:r && ./%:r <CR>
@@ -60,7 +62,6 @@ map <F12> :!gdb ./%:r <CR>
 set nu
 set guioptions-=T  "toolbar
 set guioptions-=r  "scrollbar
-set clipboard=unnamed
 set ruler
 set ignorecase smartcase
 nnoremap * /\<<C-R>=expand('<cword>')<CR>\><CR>
@@ -79,13 +80,12 @@ inoremap { {}<Left>
 inoremap {<CR> {<CR>}<Esc>O
 inoremap {{ {
 inoremap {} {}
+vmap <C-c> "+yi
+vmap <C-x> "+c
+vmap <C-v> c<ESC>"+p
+imap <C-v> <C-r><C-o>+
 
-
-
-
-
-
-
+set clipboard=unnamedplus
 set backspace=indent,eol,start
 set softtabstop=4
 set shiftwidth=4
@@ -101,6 +101,7 @@ set list lcs=tab:»\ ,trail:␣,extends:▶,precedes:◀
 set undofile
 
 set cindent cinoptions=N-s,g0,j1
+autocmd BufNewFile *.cpp 0r ~/.config/nvim/templates/skeleton.cpp
 
 set splitright splitbelow
 
@@ -131,7 +132,7 @@ cmap w!! w !sudo tee > /dev/null %
 let g:python_host_prog = '/usr/bin/python2'
 let g:python3_host_prog = '/usr/bin/python3'
 
-let g:ycm_global_ycm_extra_conf = '~/.config/nvim/ycm_global_extra_conf.py'
+let g:ycm_global_ycm_extra_conf = '~/.vim/plugged/ycm_global_extra_conf.py'
 let g:ycm_autoclose_preview_window_after_insertion = 1
 
 let delimitMate_expand_cr = 1
@@ -280,4 +281,5 @@ set tags=./.vimtags;,.vimtags,./tags;,tags
 let g:cmake_export_compile_commands = 1
 
 set cscopetag
-
+vmap <C-c> :!xclip -f -sel clip<CR>
+map <C-v> :-1r !xclip -o -sel clip<CR>
