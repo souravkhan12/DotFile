@@ -17,7 +17,7 @@ Plug 'altercation/vim-colors-solarized'
 Plug 'Raimondi/delimitMate'
 Plug 'scrooloose/nerdcommenter'
 Plug 'tpope/vim-sleuth'
-Plug 'Valloric/YouCompleteMe', { 'do': './install.py --clangd-completer --go-completer --rust-completer --ts-completer' }
+Plug 'Valloric/YouCompleteMe', { 'do': './install.py --clangd-completer' }
 Plug 'rdnetto/ycm-generator', { 'branch': 'stable' }
 "Plug 'SirVer/ultisnips'
 "Plug 'ludovicchabant/vim-gutentags'
@@ -45,7 +45,6 @@ map <C-n> :NERDTreeToggle<CR>
 let g:mapleader="\<Space>"
 let g:maplocalleader="\<Space>"
 
-source $VIMRUNTIME/vimrc_example.vim
 inoremap jj <Esc>
 set noundofile
 set hls
@@ -55,7 +54,7 @@ set ts=4
 set foldmethod=syntax
 set sw=4
 set si
-nnoremap gb :w<CR>:!printf "\033c" && g++ -g -std=c++17 -Wall -Wextra -Wno-unused-result -D LOCAL -O2 %:r.cpp -o %:r && ./%:r <CR>
+nnoremap gb :w<CR>:!printf "\033c" && g++ -g -std=c++17 -Wall -Wextra -Wno-unused-result -D LOCAL -O2 %:r.cpp -o %:r <CR>
 map <C-s> :w <CR>
 map <F12> :!gdb ./%:r <CR>
 
@@ -141,43 +140,6 @@ autocmd FileType tex let b:delimitMate_autoclose = 0
 let g:bufferline_rotate=1
 let g:bufferline_fixed_index=-1
 let g:bufferline_echo = 0
-
-noremap <silent> <Leader>w :call ToggleWrap()<CR>
-function WrapOn()
-  setlocal wrap linebreak
-  set virtualedit=
-  setlocal display+=lastline
-  noremap  <buffer> <silent> <Up>   g<Up>
-  noremap  <buffer> <silent> <Down> g<Down>
-  noremap  <buffer> <silent> <Home> g<Home>
-  noremap  <buffer> <silent> <End>  g<End>
-  inoremap <buffer> <silent> <Up>   <C-o>gk
-  inoremap <buffer> <silent> <Down> <C-o>gj
-  inoremap <buffer> <silent> <Home> <C-o>g<Home>
-  inoremap <buffer> <silent> <End>  <C-o>g<End>
-endfunction
-function WrapOff()
-  setlocal nowrap
-  set virtualedit=
-  silent! nunmap <buffer> <Up>
-  silent! nunmap <buffer> <Down>
-  silent! nunmap <buffer> <Home>
-  silent! nunmap <buffer> <End>
-  silent! iunmap <buffer> <Up>
-  silent! iunmap <buffer> <Down>
-  silent! iunmap <buffer> <Home>
-  silent! iunmap <buffer> <End>
-endfunction
-function ToggleWrap()
-  if &wrap
-    echo "Wrap OFF"
-    call WrapOff()
-  else
-    echo "Wrap ON"
-    call WrapOn()
-  endif
-endfunction
-call WrapOn()
 
 if $TERM =~ 'rxvt' || $TERM =~'termite'
   let g:solarized_visibility='low'
@@ -281,5 +243,3 @@ set tags=./.vimtags;,.vimtags,./tags;,tags
 let g:cmake_export_compile_commands = 1
 
 set cscopetag
-vmap <C-c> :!xclip -f -sel clip<CR>
-map <C-v> :-1r !xclip -o -sel clip<CR>
