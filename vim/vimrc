@@ -54,7 +54,7 @@ set ts=4
 set foldmethod=syntax
 set sw=4
 set si
-nnoremap gb :w<CR>:!printf "\033c" && g++ -g -std=c++17 -Wall -Wextra -Wno-unused-result -D LOCAL -O2 %:r.cpp -o %:r <CR>
+nnoremap gb :w<CR>:!printf "\033c" && g++ -g -std=c++17 -Wall -Wextra -Wno-unused-result -D LOCAL -O2 %:r.cpp  <CR> 
 map <C-s> :w <CR>
 map <F12> :!gdb ./%:r <CR>
 
@@ -79,10 +79,10 @@ inoremap { {}<Left>
 inoremap {<CR> {<CR>}<Esc>O
 inoremap {{ {
 inoremap {} {}
-vmap <C-c> "+yi
-vmap <C-x> "+c
-vmap <C-v> c<ESC>"+p
-imap <C-v> <C-r><C-o>+
+"vmap <C-c> "+yi
+"vmap <C-x> "+c
+"vmap <C-v> c<ESC>"+p
+"imap <C-v> <C-r><C-o>+
 
 set clipboard=unnamedplus
 set backspace=indent,eol,start
@@ -95,7 +95,7 @@ set ruler
 set showcmd
 set errorformat^=%-GIn\ file\ included\ %.%#
 set conceallevel=2
-set list lcs=tab:»\ ,trail:␣,extends:▶,precedes:◀
+
 
 set undofile
 
