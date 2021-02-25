@@ -72,9 +72,8 @@ map <F12> :!gdb ./%:r <CR>
 autocmd BufNewFile *.cpp 0r ~/.config/nvim/templates/skeleton.cpp
 nnoremap gb :w<CR>:!printf "\033c" && g++ -g -O2 -Wall -Wextra -pedantic -Wshadow -Wformat=2 -Wfloat-equal -Wconversion -Wlogical-op -Wshift-overflow=2 -Wduplicated-cond -Wcast-qual -Wcast-align -Wno-unused-result -Wno-sign-conversion %:r.cpp<CR>
 call plug#end()
-
+set clipboard+=unnamedplus
 set rtp^=/usr/share/vim/vimfiles
-
 syntax on
 filetype plugin indent on
 
@@ -107,7 +106,7 @@ nnoremap # ?\<<C-R>=expand('<cword>')<CR>\><CR>
 nnoremap <silent> <expr> <CR> &buftype ==# 'quickfix' ? "\<CR>" : ":nohl\<CR>"
 
 nnoremap gA :%y+<CR>
-nnoremap <C-p> : p<CR>
+nnoremap gP :!xclip -f<CR>
 
 " Necessary for terminal buffers not to die
 "set hidden
