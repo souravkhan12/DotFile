@@ -1,11 +1,18 @@
+set nocompatible
+filetype off
+
+let g:mapleader="\<Space>"
+let g:maplocalleader="\<Space>"
+
 call plug#begin()
 
 "Navigation Plugins
 Plug 'rbgrouleff/bclose.vim'
 Plug 'dbakker/vim-projectroot'
 Plug 'scrooloose/nerdtree'
+Plug 'junegunn/fzf'
+Plug 'junegunn/fzf.vim'
 Plug 'majutsushi/tagbar'
-Plug 'rhysd/vim-clang-format'
 
 "UI Plugins
 Plug 'vim-airline/vim-airline'
@@ -17,27 +24,33 @@ Plug 'altercation/vim-colors-solarized'
 Plug 'Raimondi/delimitMate'
 Plug 'scrooloose/nerdcommenter'
 Plug 'tpope/vim-sleuth'
-Plug 'Valloric/YouCompleteMe', { 'do': './install.py --clangd-completer' }
+Plug 'Valloric/YouCompleteMe', { 'do': './install.py --clangd-completer --go-completer --rust-completer --ts-completer' }
 Plug 'rdnetto/ycm-generator', { 'branch': 'stable' }
 "Plug 'SirVer/ultisnips'
 "Plug 'ludovicchabant/vim-gutentags'
 Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
 Plug 'editorconfig/editorconfig-vim'
+Plug 'Chiel92/vim-autoformat'
 
 "Language specific
+Plug 'tmhedberg/SimpylFold', { 'for': 'python' }
+Plug 'lervag/vimtex', { 'for': 'tex' }
 Plug 'vim-pandoc/vim-pandoc'
 Plug 'vim-pandoc/vim-pandoc-syntax'
+Plug 'yuezk/vim-js'
+Plug 'HerringtonDarkholme/yats.vim'
+"Plug 'leafgarland/typescript-vim'
+Plug 'maxmellon/vim-jsx-pretty'
 Plug 'tikhomirov/vim-glsl'
 Plug 'vhdirk/vim-cmake'
 Plug 'ds26gte/scmindent'
-
-
+Plug 'udalov/kotlin-vim'
 
 "Note taking
 Plug 'vimwiki/vimwiki'
 Plug 'lukaszkorecki/workflowish'
-call plug#end()
+
 set noswapfile
 :let g:NERDTreeWinSize=20
 
@@ -54,37 +67,19 @@ set ts=4
 set foldmethod=syntax
 set sw=4
 set si
-nnoremap gb :w<CR>:!printf "\033c" && g++ -g -std=c++17 -Wall -Wextra -Wno-unused-result -D LOCAL -O2 %:r.cpp  <CR> 
 map <C-s> :w <CR>
 map <F12> :!gdb ./%:r <CR>
+autocmd BufNewFile *.cpp 0r ~/.config/nvim/templates/skeleton.cpp
+nnoremap gb :w<CR>:!printf "\033c" && g++ -g -O2 -Wall -Wextra -pedantic -Wshadow -Wformat=2 -Wfloat-equal -Wconversion -Wlogical-op -Wshift-overflow=2 -Wduplicated-cond -Wcast-qual -Wcast-align -Wno-unused-result -Wno-sign-conversion %:r.cpp<CR>
+call plug#end()
 
-set nu
-set guioptions-=T  "toolbar
-set guioptions-=r  "scrollbar
-set ruler
-set ignorecase smartcase
-nnoremap * /\<<C-R>=expand('<cword>')<CR>\><CR>
-nnoremap # ?\<<C-R>=expand('<cword>')<CR>\><CR>
-syntax enable
-let g:airline_powerline_fonts = 1
-"for navigation
-set list lcs=tab:»\ ,trail:␣,extends:▶,precedes:◀
-set cindent cinoptions=N-s,g0,j1
+set rtp^=/usr/share/vim/vimfiles
 
+syntax on
+filetype plugin indent on
 
-let g:bufferline_rotate=1
-let g:bufferline_fixed_index=-1
-let g:bufferline_echo = 0
-inoremap { {}<Left>
-inoremap {<CR> {<CR>}<Esc>O
-inoremap {{ {
-inoremap {} {}
-"vmap <C-c> "+yi
-"vmap <C-x> "+c
-"vmap <C-v> c<ESC>"+p
-"imap <C-v> <C-r><C-o>+
+autocmd BufRead,BufNewFile *.sage,*.pyx,*.spyx set filetype=python
 
-set clipboard=unnamedplus
 set backspace=indent,eol,start
 set softtabstop=4
 set shiftwidth=4
@@ -94,13 +89,13 @@ set number
 set ruler
 set showcmd
 set errorformat^=%-GIn\ file\ included\ %.%#
+set foldmethod=syntax
 set conceallevel=2
-
+set list lcs=tab:»\ ,trail:␣,extends:▶,precedes:◀
 
 set undofile
 
-set cindent cinoptions=N-s,g0,j1
-autocmd BufNewFile *.cpp 0r ~/.config/nvim/templates/skeleton.cpp
+set cindent cinoptions=N-s,g0,j1,(s,m1
 
 set splitright splitbelow
 
@@ -111,8 +106,12 @@ nnoremap # ?\<<C-R>=expand('<cword>')<CR>\><CR>
 " Map <CR> to :nohl, except in quickfix windows
 nnoremap <silent> <expr> <CR> &buftype ==# 'quickfix' ? "\<CR>" : ":nohl\<CR>"
 
+nnoremap gA :%y+<CR>
+nnoremap <C-p> : p<CR>
+
 " Necessary for terminal buffers not to die
 "set hidden
+autocmd TermOpen * set bufhidden=hide
 
 set title
 
@@ -131,7 +130,7 @@ cmap w!! w !sudo tee > /dev/null %
 let g:python_host_prog = '/usr/bin/python2'
 let g:python3_host_prog = '/usr/bin/python3'
 
-let g:ycm_global_ycm_extra_conf = '~/.vim/plugged/ycm_global_extra_conf.py'
+let g:ycm_global_ycm_extra_conf = '~/.config/nvim/ycm_global_extra_conf.py'
 let g:ycm_autoclose_preview_window_after_insertion = 1
 
 let delimitMate_expand_cr = 1
@@ -151,7 +150,6 @@ highlight! link SignColumn LineNr
 
 set spellfile=~/.vim/spell/en.utf-8.add
 
-set laststatus=2
 
 let g:airline_powerline_fonts = 1
 
@@ -192,7 +190,7 @@ nnoremap <silent> <Leader>n :silent! NERDTreeFind<CR>:NERDTreeFocus<CR>
 
 if has('nvim')
   " For neovim 0.1.7
-  let $NVIM_TUI_ENABLE_CURSOR_SHAPE = 1
+  "let $NVIM_TUI_ENABLE_CURSOR_SHAPE = 1
   " For neovim 0.2
   "set guicursor=blah
 else
@@ -224,14 +222,6 @@ if has('nvim')
 endif
 " Project root
 let g:rootmarkers = ['.projectroot','Makefile','.git','.hg','.svn','.bzr','_darcs','build.xml']
-
-
-nnoremap <silent> <Leader>yy :YcmCompleter GoTo<CR>
-nnoremap <silent> <Leader>yr :YcmCompleter GoToReferences<CR>
-nnoremap <Leader>yd :YcmDiags<CR>
-nnoremap <Leader>yf :YcmCompleter FixIt<CR>
-nnoremap <Leader>y: :YcmCompleter<Space>
-
 let g:gutentags_project_root_finder = 'projectroot#guess'
 let g:gutentags_generate_on_missing = 0
 let g:gutentags_generate_on_new = 0
@@ -243,3 +233,6 @@ set tags=./.vimtags;,.vimtags,./tags;,tags
 let g:cmake_export_compile_commands = 1
 
 set cscopetag
+
+let g:ycm_enable_diagnostic_signs=0
+
